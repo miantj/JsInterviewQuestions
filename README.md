@@ -2,22 +2,6 @@
 
 ```js
 
-let obj1 = {
-  a: 100,
-  b: 'test',
-  c: "200"
-}
-let obj2 = {
-  a: 200,
-  b: 'test1',
-  c: "300"
-}
-let obj3 = {
-  a: 300,
-  b: 'test2',
-  c: "400"
-}
-let arr = [obj2, obj3, obj3, obj3, objobj1, obj1, obj1, obj1, obj1, obj
 function findMost(arr) {
   if (!arr.length) return;
   if (arr.length === 1) return 1;
@@ -40,9 +24,6 @@ function findMost(arr) {
 #### 2.乱序数组使其随机打乱的概率相同，却不会落在原来的位置
 
 ```js
-
-let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-
 // 洗牌算法
 function shuffle() {
   let length = arr.length,
@@ -62,3 +43,74 @@ function shuffle() {
 }
 
 ```
+
+#### 3.判断一个数是否是素数(质数)
+
+```js
+
+function primeNumber(num) {
+  let count = 0; //因子和
+  for (var i = 1; i <= num; i++) {
+    if (num % i == 0) { //因子
+      count++;
+    }
+
+  if (count == 2) {
+    console.warn(num + "是素数");
+  } else {
+    console.warn(num + "不是素数");
+  }
+}
+
+```
+
+#### 4.JS写斐波那契数列
+
+```js
+
+//  方法1：递归
+function fb1(n) {
+  if (n <= 2) {
+    return 1;
+  } else {
+    return fb1(n - 1) + fb1(n - 2);
+  }
+}
+// 方法1的递归方法基础上进行尾调用优化：
+function fb2(n, res1 = 1, res2 = 1) {
+  if (n <= 2) {
+    return res2;
+  } else {
+    return fb2(n - 1, res2, res1 + res2);
+  }
+}
+
+```
+
+#### 5.JS数组去重
+
+```js
+
+ //不包括对象,对象去重需要先转String
+function distinct(arr) { 
+  let newArr = []
+  for (let i = 0; i < arr.length; i++) {
+    if (!newArr.includes(arr[i])) {
+      newArr.push(arr[i])
+    }
+  }
+  return newArr
+
+// es6数组去重
+function distinct2(arr) {
+  let newArr = [...new Set(arr)]
+  return newArr
+}
+
+```
+
+
+
+
+
+
