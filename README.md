@@ -32,7 +32,7 @@ function findMost(arr) {
       maxNum = res[item]
     }
   }
-  return '出现次数最多的对象为:' + JSON.pa(maxName) + ', 出现次数为:' + maxNum;
+  return '出现次数最多的对象为:' + JSON.parse(maxName) + ', 出现次数为:' + maxNum;
 }
 
 ```
