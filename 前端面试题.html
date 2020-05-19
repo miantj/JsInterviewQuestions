@@ -137,7 +137,7 @@
       ];
 
       //不包括对象对象去重需要先转String
-      function distinct(arr) { 
+      function distinct(arr) {
         let newArr = []
         for (let i = 0; i < arr.length; i++) {
           if (!newArr.includes(arr[i])) {
@@ -146,12 +146,45 @@
         }
         return newArr
       }
-  
+
       // es6数组去重
       function distinct2(arr) {
         let newArr = [...new Set(arr)]
         return newArr
       }
+    })();
+
+    (function () {
+      /*
+       * 
+       * 有一组数字，从1到n（假设n=10000），从中任意删除了3个数，顺序也被打乱，剩余数字放在一个n-3的数组里，请找出丢失的数字
+       * 
+       */
+
+      function distinct(n) {
+        // 创建原数组
+        let arr = Array.from({
+          length: n
+        }, (item, index) => index + 1);
+
+        // 随机删除3个成员
+        let defectArr = arr.map(item => item).sort(() => Math.random() - 0.5).splice(0, n - 3);
+        console.time('hello');
+        let newArr = Array(defectArr.length + 3);
+        let lostArr = []; //缺失的数
+        for (let i = 0; i < defectArr.length; i++) {
+          newArr[defectArr[i]] = 1
+        }
+        for (let j = 0; j < newArr.length; j++) {
+          if (!newArr[j]) {
+            lostArr.push(j)
+          }
+        }
+        lostArr.shift(0)
+        console.timeEnd('hello');
+        return lostArr
+      }
+
     })();
   </script>
 </body>

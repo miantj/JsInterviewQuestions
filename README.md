@@ -109,7 +109,25 @@ function distinct2(arr) {
 
 ```
 
+#### 6.有一组数字，从1到n（假设n=10000），从中任意删除了3个数，顺序也被打乱，剩余数字放在一个n-3的数组里，请找出丢失的数字
 
+```js
+function distinct(defectArr) {
+  let newArr = Array(defectArr.length + 3);
+  let lostArr = []; //缺失的数
+  for (let i = 0; i < defectArr.length; i++) {
+    newArr[defectArr[i]] = 1
+  }
+  for (let j = 0; j < newArr.length; j++) {
+    if (!newArr[j]) {
+      lostArr.push(j)
+    }
+  }
+  lostArr.shift(0)  //删除第一个数字0
+  return lostArr
+}
+
+```
 
 
 
