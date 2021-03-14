@@ -383,8 +383,8 @@ MVC 和 MVVM 其实区别并不大，都是一种设计思想， MVC 和 MVVM �
 
 #### 2.Vue2.0/3.0 双向数据绑定实现原理
 
-Vue2.0：使用 ES5 的 object.defineProperty 来劫持对象属性的 getter 和 setter 操作，当数据发生变化时发出通知
-Vue3.0：使用 ES6 的 Proxy 来劫持数据，当数据发生变化时发出通知
+Vue2.0：使用 ES5 的 object.defineProperty 来劫持对象属性的 getter 和 setter 操作，当数据发生变化时发出通知,不包括数组。
+Vue3.0：使用 ES6 的 Proxy 来劫持数据，当数据发生变化时发出通知。
 
 ```html
 <div>
@@ -427,3 +427,126 @@ document.addEventListener("keyup", function (e) {
   obj1[0] = e.target.value;
 });
 ```
+
+#### 3.Vue2.0 如何检测数组变化
+
+数组考虑性能原因没有用 Object.defineProprty 对数组的每一项进行拦截，而是选择数组方法（push，shift，pop，splice，nbshift，sort，reverse）进行重写。
+**补充：** 修改数组索引和长度是无法监控到的要使用 Vue.$set()方法。
+
+#### 4.Vue v-ifv-if 和 v-for 谁的优先级高？如何正确的避免性能问题？
+
+v-for 优于 v-if 被解析，如果同时出现，每次渲染都会先执行循环再判断条件，这样就浪费了性能。
+
+#### 5.Vue 组件 data 为什么必须是函数而 Vue 根实例没有这个限制？
+
+Vue 组件可能存在多个实例，如果使用对象定义 data，会导致它们共用一个 data 对象，那么状态变更将会影响其他实例，这是不合理的；
+采用函数形式定义，在 initData 时会将其作为工厂函数返回全新 data 对象，有效规避多个实例之间状态污染问题；
+而在 vue 根实例创建过程则不存在该限制，因为根实例只有一个。
+
+#### 6.说说 Vue 中 key 的作用和工作原理
+
+（1）key 的作用是为了高效的更新虚拟 dom，其原理是 vue 在 patch 过程中通过 key 可以精准判断两个节点是否相同，从而避免频繁更新不同元素，减少 dom 操作，提高性能。
+（2）另外，若不设置 key 还可能在列表更新时引发一些隐蔽的 BUG
+
+#### 7.说说 Vue 中 diff 算法
+
+（1）diff 算法是虚拟 dom 技术的必然产物，通过新旧虚拟 dom 做对比，将变化的地方更新在真实 dom 上；另外，也需要 diff 高效的执行对比过程，从而降低时间复杂度为 0。
+（2）vue 中 diff 执行的时刻是组件实例执行更新函数时，它会对比上次渲染结果 oldVnode 和新的渲染结果 newVnode，此过程称为 patch。
+（3）diff 过程整体遵循深度优先，同层比较的策略；两个节点之间比较会根据它们是否拥有子节点或文本节点做不同操作；比较两组子节点是重点是，首先假设头尾节点可能相同做 4 次对比尝试，如果没有找到相同节点就遍历查找，查找结果再按情况处理剩下的节点；借助 key 通常可以非常精准的找到相同节点，因此整个 patch 过程非常高效。
+
+#### 8.说说对 Vue 组件化的理解
+
+（1）组件是独立和可复用的代码组织单元，组件系统是 Vue 的核心特效之一，它使开发者使用小型，独立和可复用的组件构建大型应用；
+（2）组件化能大幅提高应用开发效率，测试性，复用性等；
+（3）组件使用按分类有：页面组件，业务组件，通用组件；
+（4）vue 组件是基于配置的，我们通常编写的组件是组件配置非组件，框架后续会生成构造函数，它们基于 vueComponent，扩展于 vue；
+（5）vue 常见的组件化技术有：属性 porp，自定义事件，插槽等，它们主要用于组件通信扩展等；
+（6）合理的划分组件，有助于提升应用性能；
+（7）组件应该是高内聚，低耦合的；
+（8）遵循单项数据流的原则。
+
+#### 8.说说 Vue 性能优化的方法
+
+（1）路由懒加载
+（2）keep-alive 缓存页面
+（3）使用 v-show 复用 DOM
+（4）v-for 遍历避免使用 v-if
+（5）长列表性能优化
+
+- 如果列表存粹是数据展示，不会有任何变化，就不需要响应化使用 Object.freeze()冻结
+- 如果是大长列表，可以采用虚拟滚动，只渲染少部分区域。插件有 vue-virtual-scroller 等
+
+（6）图片懒加载
+（7）第三方插件设置按需引入
+（8）无状态的组件标记为函数式组件
+
+```html
+<template functional>
+  <div class="cell">
+    <div v-if="props.value" class="on"></div>
+    <section v-else class="off"></section>
+  </div>
+</template>
+​
+<script>
+  export default {
+    props: ["value"],
+  };
+</script>
+```
+
+(9）子组件分割
+
+```html
+<template>
+  <div>
+    <ChildComp />
+  </div>
+</template>
+​
+<script>
+  export default {
+    components: {
+      ChildComp: {
+        methods: {
+          heavy() {
+            /* 耗时任务 */
+          },
+        },
+        render(h) {
+          return h("div", this.heavy());
+        },
+      },
+    },
+  };
+</script>
+```
+
+(10)变量本地化
+
+```html
+<template>
+  <div :style="{ opacity: start / 300 }">{{ result }}</div>
+</template>
+​
+<script>
+  import { heavy } from '@/utils'
+  ​
+  export default {
+   props: ['start'],
+   computed: {
+   base () { return 42 },
+   result () {
+   const base = this.base // 创建一个常量不要频繁引用this.base
+   let result = this.start
+   for (let i = 0; i < 1000; i++) {
+   result += heavy(base)
+        }
+   return result
+      }
+    }
+  }
+</script>
+```
+
+(11)ssr 服务端渲染
