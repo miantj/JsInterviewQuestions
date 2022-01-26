@@ -436,10 +436,10 @@ document.addEventListener("keyup", function (e) {
 
 #### 3.Vue2.0 如何检测数组变化
 
-数组考虑性能原因没有用 Object.defineProprty 对数组的每一项进行拦截，而是选择数组方法（push，shift，pop，splice，nbshift，sort，reverse）进行重写。
+数组考虑性能原因没有用 Object.defineProprty 对数组的每一项进行拦截，而是对数组的原型方法（push，shift，pop，splice，nbshift，sort，reverse）进行重写，并且监听对象。
 **补充：** 修改数组索引和长度是无法监控到的要使用 Vue.$set()方法。
 
-#### 4.Vue v-ifv-if 和 v-for 谁的优先级高？如何正确的避免性能问题？
+#### 4.Vue v-if 和 v-for 谁的优先级高？如何正确的避免性能问题？
 
 v-for 优于 v-if 被解析，如果同时出现，每次渲染都会先执行循环再判断条件，这样就浪费了性能。
 
@@ -570,3 +570,10 @@ var a=[1,2,3,4]
     this.$delete(b,1)
     console.log(b)  //[1,3,4]  [0:1 , 1:3 , 2:4]
 ```
+
+
+#### 10.说说vue为什么采用异步渲染？
+
+因为如果不采用异步更新，那么每次更新数据都会对当前组件进行重新渲染，所以为了性能考虑，vue会在本轮数据更新后，再去异步更新视图。
+
+vue在更新DOM时是异步执行的，只要侦听到数据变化，Vue将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更，如果同一个watcher被多次触发，只会被推入到队列中一次，避免不必要的计算和DOM操作，然后，在下一个的事件循环tick中，Vue刷新队列并执行实际(已去重的)工作.
