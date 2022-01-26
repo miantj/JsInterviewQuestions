@@ -155,6 +155,16 @@ Promise.all([promise1, promise2, promise3]).then(function (values) {
 // expected output: Array ["promise1","promise2", "promise3"]
 ```
 
+#### 3.promise 有几种状态
+promise 有三种状态
+Pending（进行中，初始状态，既不是成功，也不是失败状态。）、Resolved（已完成，又称 Fulfilled）、Rejected（已失败）
+
+这三种状态的变化途径只有2种：
+- 异步操作从 未完成 pending => 已完成 resolved
+- 异步操作从 未完成 pending => 失败 rejected
+- 状态一旦改变，就无法再次改变状态，这也是它名字 promise-承诺 的由来，一个promise对象只能改变一次
+
+
 ## 算法
 
 #### 1.找出一维数组中出现最多的对象和次数
@@ -184,7 +194,7 @@ function findMost(arr) {
 
 ```js
 // 洗牌算法
-function shuffle() {
+function shuffle(arr) {
   let length = arr.length,
     r = length,
     rand = 0;
@@ -225,6 +235,7 @@ function primeNumber(num) {
 #### 4.JS 写斐波那契数列
 
 ```js
+
 //  方法1：递归
 function fb1(n) {
   if (n <= 2) {
@@ -233,6 +244,7 @@ function fb1(n) {
     return fb1(n - 1) + fb1(n - 2);
   }
 }
+
 // 方法1的递归方法基础上进行尾调用优化：
 function fb2(n, res1 = 1, res2 = 1) {
   if (n <= 2) {
@@ -241,13 +253,14 @@ function fb2(n, res1 = 1, res2 = 1) {
     return fb2(n - 1, res2, res1 + res2);
   }
 }
+
 ```
 
 #### 5.JS 数组去重
 
 ```js
 
- //循环去重，不包括对象,对象去重需要先转String
+ //循环去重，不包括对象,对象去重需要先转String
 function distinct(arr) {
   let newArr = []
   for (let i = 0; i < arr.length; i++) {
@@ -256,15 +269,13 @@ function distinct(arr) {
     }
   }
   return newArr
+}
 
 // es6数组去重
 function distinct2(arr) {
   let newArr = [...new Set(arr)]
   return newArr
 }
-// 思路
-//对象去重
-//先排序相邻去重，可使用正则
 
 ```
 
@@ -335,6 +346,7 @@ function quickSort(ary) {
 #### 7.有一组数字，从 1 到 n（假设 n=10000），从中任意删除了 3 个数，顺序也被打乱，剩余数字放在一个 n-3 的数组里，请找出丢失的数字
 
 ```js
+
 function distinct(defectArr) {
   let newArr = Array(defectArr.length + 3);
   let lostArr = []; //缺失的数
@@ -350,13 +362,6 @@ function distinct(defectArr) {
   return lostArr;
 }
 
-function a() {
-  let b = {};
-  let c = new Function();
-  console.log(b);
-  console.log(c);
-}
-a();
 ```
 
 ## 框架
@@ -376,7 +381,7 @@ MVC 和 MVVM 其实区别并不大，都是一种设计思想， MVC 和 MVVM �
   - （2）视图与控制器间的过于紧密的连接,妨碍了他们的独立重用;
   - （3）不适合小型项目的开发;
 
-  MVVM:具有 view（视图）,model（数据）,viewModel（控制器）,viewModel 通过一>套数据响应机制自动响应 model 中数据变化,通过监听 view 中用户交互操作修改 >model 中数据，这样在 viewModel 中就减少了大量 DOM 操作代码,模式是双向绑定。
+  MVVM:具有 view（视图）,model（数据）,viewModel（控制器）,viewModel 通过一套数据响应机制自动响应 model 中数据变化,通过监听 view 中用户交互操作修改 model 中数据，这样在 viewModel 中就减少了大量 DOM 操作代码,模式是双向绑定。
  
   优点：
   - （1）数据驱动使开发更高效
